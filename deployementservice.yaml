@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: spring-boot-k8s
-          image: sanaeabahcine371/devops-integration:${DOCKERTAG}
+          image: sanaeabahcine371/devops-integration:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
