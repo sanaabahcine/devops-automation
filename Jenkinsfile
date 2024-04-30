@@ -14,23 +14,23 @@ pipeline {
         stage('Build docker image') {
             steps {
                 script {
-                    sh 'docker build -t sanaeabahcine371/devops-integration .'
+                    app = docker.build("sanaeabahcine371/devops-integration .")
+            
                 }
             }
         }
         stage('push mage to dockerhub'){
-            steps{
-                script{
-                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
-                    sh 'docker login -u sanaeabahcine371 -p ${dockerhubpwd}'
-
+               docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+            app.push("${env.BUILD_NUMBER}")
+               }
 
               }
-              sh 'docker push sanaeabahcine371/devops-integration'
-                }
-            }
+             
+    stage('Trigger ManifestUpdate') {
+                echo "triggering updatemanifestjob"
+                build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
         }
-
+}
 
 
 
